@@ -8,7 +8,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
   <style>
+    /* Scrollbar styling for dropdown */
     .dropdown-menu::-webkit-scrollbar {
       width: 6px;
     }
@@ -16,6 +18,23 @@
     .dropdown-menu::-webkit-scrollbar-thumb {
       background-color: rgba(100, 100, 100, 0.5);
       border-radius: 10px;
+    }
+
+    /* ✅ Responsive Modal Fixes */
+    @media (max-width: 640px) {
+      #cartModal>div,
+      #loginModal>div {
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        margin: auto;
+      }
+
+      #cartModal,
+      #loginModal {
+        align-items: flex-start;
+        padding-top: 40px;
+      }
     }
   </style>
 </head>
@@ -28,23 +47,28 @@
       <a href="index.html" class="text-2xl font-bold text-indigo-600 whitespace-nowrap">Quick Pick Hub</a>
       <div class="flex items-center space-x-4">
 
-        <a href="order-tracking.html" class="text-indigo-600 font-semibold hover:underline px-3 py-2 whitespace-nowrap">Order Tracking</a>
+        <a href="order-tracking.html"
+          class="text-indigo-600 font-semibold hover:underline px-3 py-2 whitespace-nowrap">Order Tracking</a>
 
         <!-- 🔔 Notifications -->
         <div class="relative">
-          <button id="btnNotifications" class="relative text-indigo-600 hover:text-indigo-800 px-3 py-2" aria-label="Notifications">
+          <button id="btnNotifications" class="relative text-indigo-600 hover:text-indigo-800 px-3 py-2"
+            aria-label="Notifications">
             <i class="fas fa-bell"></i>
-            <span id="notifCount" class="absolute -top-2 -right-1 bg-red-500 text-white rounded-full px-2 text-xs">3</span>
+            <span id="notifCount"
+              class="absolute -top-2 -right-1 bg-red-500 text-white rounded-full px-2 text-xs">3</span>
           </button>
 
-          <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg overflow-hidden dropdown-menu max-h-80 overflow-y-auto z-50">
+          <div id="notifDropdown"
+            class="hidden absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg overflow-hidden dropdown-menu max-h-80 overflow-y-auto z-50">
             <div class="p-3 border-b font-semibold text-gray-700">Notifications</div>
             <ul>
               <li class="p-3 border-b hover:bg-gray-50 cursor-pointer text-sm text-gray-700">
                 <i class="fas fa-box text-indigo-500 mr-2"></i>Your order <strong>ORD-1002</strong> has been shipped!
               </li>
               <li class="p-3 border-b hover:bg-gray-50 cursor-pointer text-sm text-gray-700">
-                <i class="fas fa-check-circle text-green-500 mr-2"></i>Order <strong>ORD-1003</strong> delivered successfully.
+                <i class="fas fa-check-circle text-green-500 mr-2"></i>Order <strong>ORD-1003</strong> delivered
+                successfully.
               </li>
               <li class="p-3 hover:bg-gray-50 cursor-pointer text-sm text-gray-700">
                 <i class="fas fa-times-circle text-red-500 mr-2"></i>Order <strong>ORD-1004</strong> was cancelled.
@@ -53,13 +77,16 @@
           </div>
         </div>
 
+        <!-- 🛒 Cart -->
         <button id="btnCart" class="relative text-indigo-600 hover:text-indigo-800 px-3 py-2" aria-label="Cart">
           <i class="fas fa-shopping-cart mr-1"></i> Cart
-          <span id="cartCount" class="absolute -top-2 -right-3 bg-red-500 text-white rounded-full px-2 text-xs hidden">0</span>
+          <span id="cartCount"
+            class="absolute -top-2 -right-3 bg-red-500 text-white rounded-full px-2 text-xs hidden">0</span>
         </button>
 
-        <button id="btnLogin" class="cursor-pointer text-indigo-600 font-semibold hover:underline px-3 py-2 whitespace-nowrap">Login</button>
-
+        <!-- 🔐 Login -->
+        <button id="btnLogin"
+          class="cursor-pointer text-indigo-600 font-semibold hover:underline px-3 py-2 whitespace-nowrap">Login</button>
       </div>
     </div>
   </nav>
@@ -86,33 +113,42 @@
     <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
   </section>
 
-  <!-- Cart Modal -->
-  <div id="cartModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 overflow-auto flex items-center justify-center px-2">
-    <div class="bg-white w-full max-w-xl rounded-lg shadow-lg overflow-hidden relative">
+  <!-- 🛒 Cart Modal -->
+  <div id="cartModal"
+    class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 overflow-auto flex items-center justify-center px-2 transition-opacity duration-300">
+    <div
+      class="bg-white w-full sm:max-w-xl max-w-sm rounded-lg shadow-lg overflow-hidden relative mx-2 sm:mx-0 transform transition-transform duration-300 scale-95">
       <div class="flex justify-between items-center px-4 py-3 bg-gray-100 border-b">
         <i class="fas fa-shopping-cart text-indigo-600 text-2xl" aria-hidden="true" title="Shopping Cart"></i>
-        <button id="btnCloseCart" class="text-gray-500 hover:text-gray-700 text-2xl" title="Close" aria-label="Close Cart">&times;</button>
+        <button id="btnCloseCart" class="text-gray-500 hover:text-gray-700 text-2xl" title="Close"
+          aria-label="Close Cart">&times;</button>
       </div>
       <ul id="cartList" class="max-h-96 overflow-y-auto px-4 py-2"></ul>
       <div class="px-4 py-2 font-bold text-lg text-right" id="cartTotal">₱0.00</div>
       <div class="px-4 pb-4">
         <label for="paymentMethod" class="block mb-2 font-semibold">Select Payment Method:</label>
-        <select id="paymentMethod" class="w-full border rounded p-2 outline-none focus:ring-2 focus:ring-indigo-500 mb-4"
+        <select id="paymentMethod"
+          class="w-full border rounded p-2 outline-none focus:ring-2 focus:ring-indigo-500 mb-4"
           aria-label="Choose payment method">
           <option value="">-- Choose a payment method --</option>
           <option value="gcash">GCash</option>
           <option value="cod">Cash on Delivery</option>
           <option value="bank_card">Bank Card</option>
         </select>
-        <button id="btnCheckout" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded disabled:opacity-50" disabled>Proceed to Checkout</button>
+        <button id="btnCheckout"
+          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded disabled:opacity-50"
+          disabled>Proceed to Checkout</button>
       </div>
     </div>
   </div>
 
-  <!-- Login Modal -->
-  <div id="loginModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-2">
-    <div class="bg-white rounded-lg max-w-md w-full p-6 relative">
-      <button id="loginCloseBtn" class="absolute top-4 right-4 text-indigo-600 hover:text-indigo-800 text-2xl focus:outline-none">&times;</button>
+  <!-- 🔐 Login Modal -->
+  <div id="loginModal"
+    class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-2 transition-opacity duration-300">
+    <div
+      class="bg-white rounded-lg w-full max-w-sm sm:max-w-md p-6 relative mx-2 sm:mx-0 overflow-y-auto max-h-[90vh] transform transition-transform duration-300 scale-95">
+      <button id="loginCloseBtn"
+        class="absolute top-4 right-4 text-indigo-600 hover:text-indigo-800 text-2xl focus:outline-none">&times;</button>
       <h2 class="text-2xl font-bold mb-4 text-indigo-600">Log In</h2>
       <form id="loginForm" class="space-y-4">
         <input type="text" placeholder="Phone number / Username / Email" required
@@ -127,7 +163,8 @@
           </button>
         </div>
         <button type="submit"
-          class="bg-indigo-600 text-white font-semibold w-full py-2 rounded hover:bg-indigo-700 transition">LOG IN</button>
+          class="bg-indigo-600 text-white font-semibold w-full py-2 rounded hover:bg-indigo-700 transition">LOG
+          IN</button>
       </form>
       <div class="mt-4 text-center">
         <a href="#" class="text-blue-600 hover:underline">Forgot Password</a>
@@ -160,36 +197,36 @@
       <div>
         <h3 class="text-lg font-semibold mb-4 text-indigo-600">Quick Pick Hub</h3>
         <ul class="space-y-2">
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Help Centre</a></li>
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Shopee Cares PH</a></li>
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Payment Methods</a></li>
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">QuickpickPay</a></li>
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Quickpick Coins</a></li>
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Free Shipping</a></li>
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Return & Refund</a></li>
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Quick pick Guarantee</a></li>
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Overseas Product</a></li>
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Contact Us</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">Help Centre</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">Shopee Cares PH</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">Payment Methods</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">QuickpickPay</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">Quickpick Coins</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">Free Shipping</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">Return & Refund</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">Quick pick Guarantee</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">Overseas Product</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">Contact Us</a></li>
         </ul>
       </div>
 
       <div>
         <h3 class="text-lg font-semibold mb-4 text-indigo-600">About</h3>
         <ul class="space-y-2">
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">About Us</a></li>
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Careers</a></li>
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Privacy Policy</a></li>
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Terms & Conditions</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">About Us</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">Careers</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">Privacy Policy</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">Terms & Conditions</a></li>
         </ul>
       </div>
 
       <div>
         <h3 class="text-lg font-semibold mb-4 text-indigo-600">Customer Support</h3>
         <ul class="space-y-2">
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">FAQs</a></li>
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Report an Issue</a></li>
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Shipping Information</a></li>
-          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Return Policy</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">FAQs</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">Report an Issue</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">Shipping Information</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline">Return Policy</a></li>
         </ul>
       </div>
 
@@ -209,6 +246,7 @@
     </div>
   </footer>
 
+  <!-- JS -->
   <script>
     // Toggle notification dropdown
     const btnNotifications = document.getElementById("btnNotifications");
@@ -218,7 +256,6 @@
       notifDropdown.classList.toggle("hidden");
     });
 
-    // Close dropdown when clicking outside
     document.addEventListener("click", (e) => {
       if (!btnNotifications.contains(e.target) && !notifDropdown.contains(e.target)) {
         notifDropdown.classList.add("hidden");
@@ -228,4 +265,5 @@
 
   <script src="app.js" defer></script>
 </body>
+
 </html>
