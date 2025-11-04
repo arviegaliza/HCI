@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quick Pick Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    .dropdown-menu::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .dropdown-menu::-webkit-scrollbar-thumb {
+      background-color: rgba(100, 100, 100, 0.5);
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 font-sans">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="text-2xl font-bold text-indigo-600 whitespace-nowrap">Quick Pick Hub</a>
+      <div class="flex items-center space-x-4">
+
+        <a href="order-tracking.html" class="text-indigo-600 font-semibold hover:underline px-3 py-2 whitespace-nowrap">Order Tracking</a>
+
+        <!-- 🔔 Notifications -->
+        <div class="relative">
+          <button id="btnNotifications" class="relative text-indigo-600 hover:text-indigo-800 px-3 py-2" aria-label="Notifications">
+            <i class="fas fa-bell"></i>
+            <span id="notifCount" class="absolute -top-2 -right-1 bg-red-500 text-white rounded-full px-2 text-xs">3</span>
+          </button>
+
+          <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg overflow-hidden dropdown-menu max-h-80 overflow-y-auto z-50">
+            <div class="p-3 border-b font-semibold text-gray-700">Notifications</div>
+            <ul>
+              <li class="p-3 border-b hover:bg-gray-50 cursor-pointer text-sm text-gray-700">
+                <i class="fas fa-box text-indigo-500 mr-2"></i>Your order <strong>ORD-1002</strong> has been shipped!
+              </li>
+              <li class="p-3 border-b hover:bg-gray-50 cursor-pointer text-sm text-gray-700">
+                <i class="fas fa-check-circle text-green-500 mr-2"></i>Order <strong>ORD-1003</strong> delivered successfully.
+              </li>
+              <li class="p-3 hover:bg-gray-50 cursor-pointer text-sm text-gray-700">
+                <i class="fas fa-times-circle text-red-500 mr-2"></i>Order <strong>ORD-1004</strong> was cancelled.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <button id="btnCart" class="relative text-indigo-600 hover:text-indigo-800 px-3 py-2" aria-label="Cart">
+          <i class="fas fa-shopping-cart mr-1"></i> Cart
+          <span id="cartCount" class="absolute -top-2 -right-3 bg-red-500 text-white rounded-full px-2 text-xs hidden">0</span>
+        </button>
+
+        <button id="btnLogin" class="cursor-pointer text-indigo-600 font-semibold hover:underline px-3 py-2 whitespace-nowrap">Login</button>
+
+      </div>
+    </div>
+  </nav>
+
+  <!-- Search and Filter -->
+  <div class="container mx-auto px-4 mt-4 flex space-x-4 items-center max-w-md">
+    <input type="text" id="searchInput" placeholder="Search products by name or category..." aria-label="Search products"
+      class="flex-grow p-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+
+    <select id="categoryFilter" aria-label="Filter products by category"
+      class="border border-gray-300 rounded p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+      <option value="">All Categories</option>
+      <option value="Electronics">Electronics</option>
+      <option value="Footwear">Shoes</option>
+      <option value="Apparel">Clothes</option>
+      <option value="Home Appliances">Home Appliances</option>
+      <option value="Accessories">Accessories</option>
+    </select>
+  </div>
+
+  <!-- Products Section -->
+  <section id="productsSection" class="container mx-auto p-4 mt-6">
+    <h2 class="text-3xl font-semibold mb-6">Products</h2>
+    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+  </section>
+
+  <!-- Cart Modal -->
+  <div id="cartModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 overflow-auto flex items-center justify-center px-2">
+    <div class="bg-white w-full max-w-xl rounded-lg shadow-lg overflow-hidden relative">
+      <div class="flex justify-between items-center px-4 py-3 bg-gray-100 border-b">
+        <i class="fas fa-shopping-cart text-indigo-600 text-2xl" aria-hidden="true" title="Shopping Cart"></i>
+        <button id="btnCloseCart" class="text-gray-500 hover:text-gray-700 text-2xl" title="Close" aria-label="Close Cart">&times;</button>
+      </div>
+      <ul id="cartList" class="max-h-96 overflow-y-auto px-4 py-2"></ul>
+      <div class="px-4 py-2 font-bold text-lg text-right" id="cartTotal">₱0.00</div>
+      <div class="px-4 pb-4">
+        <label for="paymentMethod" class="block mb-2 font-semibold">Select Payment Method:</label>
+        <select id="paymentMethod" class="w-full border rounded p-2 outline-none focus:ring-2 focus:ring-indigo-500 mb-4"
+          aria-label="Choose payment method">
+          <option value="">-- Choose a payment method --</option>
+          <option value="gcash">GCash</option>
+          <option value="cod">Cash on Delivery</option>
+          <option value="bank_card">Bank Card</option>
+        </select>
+        <button id="btnCheckout" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded disabled:opacity-50" disabled>Proceed to Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-2">
+    <div class="bg-white rounded-lg max-w-md w-full p-6 relative">
+      <button id="loginCloseBtn" class="absolute top-4 right-4 text-indigo-600 hover:text-indigo-800 text-2xl focus:outline-none">&times;</button>
+      <h2 class="text-2xl font-bold mb-4 text-indigo-600">Log In</h2>
+      <form id="loginForm" class="space-y-4">
+        <input type="text" placeholder="Phone number / Username / Email" required
+          class="w-full border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500" />
+        <div class="relative">
+          <input id="loginPassword" type="password" placeholder="Password" required
+            class="w-full border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500" />
+          <button type="button" id="togglePassword"
+            class="absolute right-3 top-2 text-gray-400 hover:text-gray-600 focus:outline-none"
+            aria-label="Toggle password visibility">
+            <i class="fa fa-eye"></i>
+          </button>
+        </div>
+        <button type="submit"
+          class="bg-indigo-600 text-white font-semibold w-full py-2 rounded hover:bg-indigo-700 transition">LOG IN</button>
+      </form>
+      <div class="mt-4 text-center">
+        <a href="#" class="text-blue-600 hover:underline">Forgot Password</a>
+      </div>
+      <div class="flex items-center my-4">
+        <hr class="flex-grow border-t border-gray-300" />
+        <span class="mx-3 text-gray-500">OR</span>
+        <hr class="flex-grow border-t border-gray-300" />
+      </div>
+      <div class="flex space-x-4">
+        <button
+          class="flex-grow py-2 border rounded flex items-center justify-center space-x-2 hover:bg-gray-100 transition focus:outline-none">
+          <i class="fab fa-facebook text-blue-600"></i>
+          <span>Facebook</span>
+        </button>
+        <button
+          class="flex-grow py-2 border rounded flex items-center justify-center space-x-2 hover:bg-gray-100 transition focus:outline-none">
+          <i class="fab fa-google text-red-600"></i>
+          <span>Google</span>
+        </button>
+      </div>
+      <p class="text-center text-gray-500 mt-6">New to Quick Pick Hub? <a href="#"
+          class="text-indigo-600 font-semibold">Sign Up</a></p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white text-gray-800 mt-10 border-t-4 border-white shadow-inner">
+    <div class="container mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div>
+        <h3 class="text-lg font-semibold mb-4 text-indigo-600">Quick Pick Hub</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Help Centre</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Shopee Cares PH</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Payment Methods</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">QuickpickPay</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Quickpick Coins</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Free Shipping</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Return & Refund</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Quick pick Guarantee</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Overseas Product</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold mb-4 text-indigo-600">About</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">About Us</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Careers</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Privacy Policy</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Terms & Conditions</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold mb-4 text-indigo-600">Customer Support</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">FAQs</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Report an Issue</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Shipping Information</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Return Policy</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold mb-4 text-indigo-600">Follow Us</h3>
+        <div class="flex space-x-5">
+          <a href="#" class="hover:text-blue-600 text-2xl"><i class="fab fa-facebook"></i></a>
+          <a href="#" class="hover:text-pink-500 text-2xl"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="hover:text-sky-400 text-2xl"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="hover:text-blue-700 text-2xl"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-white mt-6 text-center py-4 text-gray-600 text-sm bg-indigo-600 text-white">
+      © 2025 Quick Pick Hub. All Rights Reserved.
+    </div>
+  </footer>
+
+  <script>
+    // Toggle notification dropdown
+    const btnNotifications = document.getElementById("btnNotifications");
+    const notifDropdown = document.getElementById("notifDropdown");
+
+    btnNotifications.addEventListener("click", () => {
+      notifDropdown.classList.toggle("hidden");
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!btnNotifications.contains(e.target) && !notifDropdown.contains(e.target)) {
+        notifDropdown.classList.add("hidden");
+      }
+    });
+  </script>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

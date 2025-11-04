@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Tracking - Quick Pick Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body class="bg-gray-50 font-sans">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="text-2xl font-bold text-indigo-600 whitespace-nowrap">Quick Pick Hub</a>
+      <div class="flex items-center space-x-4">
+
+        <!-- Home link -->
+        <a href="index.html" class="text-indigo-600 font-semibold hover:underline px-3 py-2 whitespace-nowrap">Home</a>
+
+        <a href="order-tracking.html" class="text-indigo-600 font-semibold hover:underline px-3 py-2 whitespace-nowrap">Order Tracking</a>
+
+        <button id="btnCart" class="relative text-indigo-600 hover:text-indigo-800 px-3 py-2" aria-label="Cart">
+          <i class="fas fa-shopping-cart mr-1"></i> Cart
+          <span id="cartCount" class="absolute -top-2 -right-3 bg-red-500 text-white rounded-full px-2 text-xs hidden">0</span>
+        </button>
+
+        <button id="btnLogin" class="cursor-pointer text-indigo-600 font-semibold hover:underline px-3 py-2 whitespace-nowrap">Login</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="container mx-auto px-4 mt-8 text-center">
+    <h1 class="text-3xl font-bold text-indigo-600 mb-2">Order Tracking</h1>
+    <p class="text-gray-600 mb-6">Track your recent orders and delivery updates.</p>
+  </header>
+
+  <!-- Search -->
+  <div class="container mx-auto px-4 max-w-lg mb-6">
+    <input type="text" id="searchOrder" placeholder="Search by Order ID or Product Name..." 
+           class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+  </div>
+
+  <!-- Orders Table -->
+  <div class="container mx-auto px-4 overflow-x-auto">
+    <table class="w-full bg-white rounded-lg shadow-md overflow-hidden">
+      <thead class="bg-indigo-600 text-white">
+        <tr>
+          <th class="py-3 px-4 text-left">Order ID</th>
+          <th class="py-3 px-4 text-left">Product</th>
+          <th class="py-3 px-4 text-left">Date</th>
+          <th class="py-3 px-4 text-left">Status</th>
+          <th class="py-3 px-4 text-left">Total</th>
+        </tr>
+      </thead>
+      <tbody id="orderTableBody" class="divide-y divide-gray-200">
+        <!-- Sample Orders -->
+        <tr>
+          <td class="py-3 px-4 font-semibold">ORD-1001</td>
+          <td class="py-3 px-4">Wireless Headphones</td>
+          <td class="py-3 px-4">Nov 3, 2025</td>
+          <td class="py-3 px-4"><span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-semibold">Processing</span></td>
+          <td class="py-3 px-4">₱99.99</td>
+        </tr>
+        <tr>
+          <td class="py-3 px-4 font-semibold">ORD-1002</td>
+          <td class="py-3 px-4">Sports Running Shoes</td>
+          <td class="py-3 px-4">Oct 30, 2025</td>
+          <td class="py-3 px-4"><span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">Shipped</span></td>
+          <td class="py-3 px-4">₱59.99</td>
+        </tr>
+        <tr>
+          <td class="py-3 px-4 font-semibold">ORD-1003</td>
+          <td class="py-3 px-4">Classic White T-Shirt</td>
+          <td class="py-3 px-4">Oct 25, 2025</td>
+          <td class="py-3 px-4"><span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">Delivered</span></td>
+          <td class="py-3 px-4">₱12.99</td>
+        </tr>
+        <tr>
+          <td class="py-3 px-4 font-semibold">ORD-1004</td>
+          <td class="py-3 px-4">Smart Watch</td>
+          <td class="py-3 px-4">Oct 20, 2025</td>
+          <td class="py-3 px-4"><span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-semibold">Cancelled</span></td>
+          <td class="py-3 px-4">₱199.99</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white text-gray-800 mt-10 border-t-4 border-white shadow-inner">
+    <div class="container mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div>
+        <h3 class="text-lg font-semibold mb-4 text-indigo-600">Quick Pick Hub</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Help Centre</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Contact Us</a></li>
+          <li><a href="#" class="hover:text-indigo-600 hover:underline underline-offset-2 decoration-indigo-600">Return & Refund</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold mb-4 text-indigo-600">Follow Us</h3>
+        <div class="flex space-x-5">
+          <a href="#" class="hover:text-blue-600 text-2xl"><i class="fab fa-facebook"></i></a>
+          <a href="#" class="hover:text-pink-500 text-2xl"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="hover:text-sky-400 text-2xl"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-white mt-6 text-center py-4 text-gray-600 text-sm bg-indigo-600 text-white">
+      © 2025 Quick Pick Hub. All Rights Reserved.
+    </div>
+  </footer>
+
+  <script>
+    // Filter orders by text input
+    document.getElementById('searchOrder').addEventListener('input', function () {
+      const searchText = this.value.toLowerCase();
+      document.querySelectorAll('#orderTableBody tr').forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchText) ? '' : 'none';
+      });
+    });
+  </script>
+
+</body>
+</html>
